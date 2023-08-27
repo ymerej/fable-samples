@@ -4,13 +4,15 @@ open Elmish
 open Fable.Remoting.Client
 open Shared
 
-type Model = { Todos: Todo list; Input: string }
+type Model = { Todos: Todo list; Input: string; Comments: string list }
 
 type Msg =
     | GotTodos of Todo list
     | SetInput of string
     | AddTodo
     | AddedTodo of Todo
+    | AddComment of string
+    | AddedComment of string list
 
 let todosApi =
     Remoting.createApi ()
@@ -18,7 +20,7 @@ let todosApi =
     |> Remoting.buildProxy<ITodosApi>
 
 let init () : Model * Cmd<Msg> =
-    let model = { Todos = []; Input = "" }
+    let model = { Todos = []; Input = ""; Comments = [ ]}
 
     let cmd = Cmd.OfAsync.perform todosApi.getTodos () GotTodos
 
@@ -35,9 +37,13 @@ let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
 
         { model with Input = "" }, cmd
     | AddedTodo todo -> { model with Todos = model.Todos @ [ todo ] }, Cmd.none
+    | AddComment comment -> model, Cmd.OfAsync.perform todosApi.addComment comment AddedComment
+    | AddedComment comments -> { model with Comments = comments }, Cmd.none
+
 
 open Feliz
 open Feliz.Bulma
+open Client.Comments
 
 let navBrand =
     Bulma.navbarBrand.div [
@@ -52,6 +58,7 @@ let navBrand =
             ]
         ]
     ]
+
 
 let containerBox (model: Model) (dispatch: Msg -> unit) =
     Bulma.box [
@@ -84,6 +91,7 @@ let containerBox (model: Model) (dispatch: Msg -> unit) =
                 ]
             ]
         ]
+
     ]
 
 let view (model: Model) (dispatch: Msg -> unit) =
@@ -109,9 +117,15 @@ let view (model: Model) (dispatch: Msg -> unit) =
                         prop.children [
                             Bulma.title [
                                 text.hasTextCentered
-                                prop.text "fable_samples"
+                                prop.text "fable_samples 2"
                             ]
                             containerBox model dispatch
+
+                            let commentProps =
+                                { OnAddComment =  (fun comment -> dispatch (AddComment comment)) }
+
+                            yield! View.renderCommentVariations model.Comments commentProps
+
                         ]
                     ]
                 ]

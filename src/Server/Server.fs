@@ -8,6 +8,7 @@ open Shared
 
 module Storage =
     let todos = ResizeArray()
+    let comments = ResizeArray()
 
     let addTodo (todo: Todo) =
         if Todo.isValid todo.Description then
@@ -15,6 +16,9 @@ module Storage =
             Ok()
         else
             Error "Invalid todo"
+
+    let addComment (comment: string) =
+        comments.Add comment
 
     do
         addTodo (Todo.create "Create new SAFE project")
@@ -32,7 +36,11 @@ let todosApi =
                     match Storage.addTodo todo with
                     | Ok () -> todo
                     | Error e -> failwith e
-            } }
+            }
+      addComment = fun comment -> async {
+          Storage.addComment comment
+          return Storage.comments |> List.ofSeq
+      } }
 
 let webApp =
     Remoting.createApi ()
