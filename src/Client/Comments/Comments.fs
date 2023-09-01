@@ -2,6 +2,9 @@ module Client.Comments
 
 open Feliz
 open Feliz.Bulma
+open Feliz.Styles
+open Feliz.style
+
 
 
 type CommentBoxProps = {
@@ -49,4 +52,59 @@ let BulmaCommentBox (props: CommentBoxProps) =
         ]
     ]
 
+
+[<ReactComponent>]
+let EmbeddedCommentBox (props: CommentBoxProps) =
+    // This version has styles embedded using Feliz style DSL
+
+    let (comment, setComment) = React.useState ""
+    Html.div [
+        prop.style [
+            style.margin  (length.px 20, length.px 0)
+        ]
+        prop.children [
+        Html.div [
+            // prop.style [
+            //     style.marginBottom (length.px 10)
+            // ]
+            prop.children [
+            Html.textarea [
+                prop.placeholder "Enter your comment...";
+                prop.value comment;
+                prop.onChange (fun (ev: string) -> setComment ev);
+                prop.style [
+                    // Feliz offers strongly typed styles to help ensure that the styles are verified by the compiler
+                    //   as opposed to verifying everything within a browser
+                    style.width (length.perc 100.);
+                    style.padding (length.px 10);
+                    style.borderWidth 1;
+                    borderStyle.solid;
+                    borderColor.lightGray;
+                    style.borderRadius (length.px 5)
+                ]
+            ]
+            ]
+        ]
+        Html.div [
+            Html.button [
+                prop.onClick (fun _ ->
+                    props.OnAddComment comment
+                    setComment ""
+                )
+
+                prop.text "Add Comment"
+                prop.style [
+                    backgroundColor.blue;
+                    style.color.white;
+                    style.padding (length.px 10, length.px 20);
+                    style.borderWidth 1;
+                    borderStyle.solid;
+                    borderColor.lightGray;
+                    style.borderRadius (length.px 5);
+                    cursor.pointer
+                ]
+            ]
+        ]
+        ]
+    ]
 
