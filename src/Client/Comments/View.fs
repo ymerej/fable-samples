@@ -6,10 +6,12 @@ open Feliz.Bulma
 let renderCommentVariations (comments : string list) commentProps =
     [
         Bulma.container [
-            BulmaCommentBox { OnAddComment = commentProps.OnAddComment  }
+            BulmaCommentBox { OnAddComment = commentProps.OnAddComment }
         ]
 
-        EmbeddedCommentBox { OnAddComment = commentProps.OnAddComment  }
+        EmbeddedCommentBox { OnAddComment = commentProps.OnAddComment }
+
+        EmbeddedRawCommentBox  { OnAddComment = commentProps.OnAddComment }
 
         Bulma.container [
             Html.h1 [ Html.text "Comments" ]
@@ -21,3 +23,4 @@ let renderCommentVariations (comments : string list) commentProps =
             ]
         ]
     ]
+
