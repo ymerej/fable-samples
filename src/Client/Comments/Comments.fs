@@ -4,11 +4,13 @@ open Feliz
 open Feliz.Bulma
 open Feliz.style
 
-// This is some example variations of how ReactComponents can be written.
+// This is some example variations of how a ReactComponent for a CommentBox can be written.
 //   This is not an exhaustive list.
 // Within the realm of styling and HTML generation there are many syntax variations possible.
 //      Anywhere from customizing on a per line of code basis
 //      to levels of composition along the lines of a design library
+
+// NOTE a person with a keen eye for good component design will likely see several flaws in the examples below.
 
 
 type CommentBoxProps = {
