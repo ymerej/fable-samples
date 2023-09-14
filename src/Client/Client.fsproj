@@ -9,6 +9,7 @@
         <None Include="paket.references" />
         <Compile Include="Comments\Comments.fs" />
         <Compile Include="Comments\View.fs" />
+        <Compile Include="FormControls\Person.fs" />
         <Compile Include="Index.fs" />
         <Compile Include="App.fs" />
 
